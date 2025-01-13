@@ -75,7 +75,7 @@ const Login = () => {
                   placeholder="john@gmail.com"
                   require="true"
                 />
-              </div> 
+              </div>
               <div className="space-y-1">
                 <Label htmlFor="name">Password</Label>
                 <Input
