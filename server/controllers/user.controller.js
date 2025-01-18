@@ -71,9 +71,11 @@ const loginController = async (req, res) => {
 
     generateToken(res, user, `Welcome back ${user.name}`);
   } catch (error) {
+    console.log(error);
     return res.status(200).send({
       success: false,
       message: "Failed to login.",
+      error,
     });
   }
 };
