@@ -1,5 +1,9 @@
 import express from "express";
 import "colors";
+import morgan from "morgan";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDb from "./database/db.js";
 import userRoutes from "./routes/user.routes.js";
@@ -9,6 +13,15 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:8080",
+    credentials: true,
+  })
+);
 
 // call database connection
 connectDb();
@@ -29,5 +42,9 @@ app.listen(port, () => {
 // global catch
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(404).send("Error");
+  res.status(404).send({
+    success: false,
+    message: 'Backend is Down !!!',
+    err
+  });
 });
