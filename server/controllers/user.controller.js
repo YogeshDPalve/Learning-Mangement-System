@@ -40,7 +40,7 @@ const registerController = async (req, res) => {
     });
   }
 };
-
+ 
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -60,7 +60,7 @@ const loginController = async (req, res) => {
       });
     }
 
-    const isPasswordCorrect = bcrypt.compare(user.password, password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password); // Correct order and added await
 
     if (!isPasswordCorrect) {
       return res.status(400).send({
@@ -72,7 +72,7 @@ const loginController = async (req, res) => {
     generateToken(res, user, `Welcome back ${user.name}`);
   } catch (error) {
     console.log(error);
-    return res.status(200).send({
+    return res.status(500).send({ // Changed status to 500 for server errors
       success: false,
       message: "Failed to login.",
       error,
@@ -80,4 +80,4 @@ const loginController = async (req, res) => {
   }
 };
 
-export { registerController, loginController };
+export { registerController, loginController }

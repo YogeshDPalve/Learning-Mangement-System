@@ -18,7 +18,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -35,16 +35,16 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server listen at http://localhost:${port}`.bgWhite);
-});
-
 // global catch
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(404).send({
     success: false,
-    message: 'Backend is Down !!!',
-    err
+    message: "Backend is Down !!!",
+    err,
   });
+});
+
+app.listen(port, () => {
+  console.log(`Server listen at http://localhost:${port}`.bgWhite);
 });
