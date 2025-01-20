@@ -1,4 +1,4 @@
-import { School } from "lucide-react";
+import { Menu, School } from "lucide-react";
 import React from "react";
 import {
   DropdownMenu,
@@ -6,17 +6,29 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "@/DarkMode";
+import { Link } from "react-router-dom";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+
+// -------------------------------------------------------------------------
 const Navbar = () => {
-  const user = false;
+  const user = true;
   return (
     <div className=" h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 left-0 right-0 duration-300 z-10">
-      {/* Desktop */}
+      {/* // ! Desktop */}
       <div className="w-[90%]   max-w-7xl mx-auto hidden  md:flex justify-between items-center gap-10 h-full">
         <div className=" flex items-center gap-2 text-gray-700">
           <School size={"30"} />
@@ -28,16 +40,18 @@ const Navbar = () => {
           {/* user icon and dark mode icon */}
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTr igger asChild>
+              <DropdownMenuTrigger asChild>
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-              </DropdownMenuTr>
+              </DropdownMenuTrigger>
               <DropdownMenuContent className="w-52 mr-2">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>My Learning</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to={"my-learning"}>My Learning</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Edit Profile</DropdownMenuItem>
                 <DropdownMenuItem>Dashboard</DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -53,8 +67,52 @@ const Navbar = () => {
           <DarkMode />
         </div>
       </div>
+      {/* //! Mobile navbar */}
+      <div className="flex md:hidden items-center justify-between px-4 h-full">
+        <h1 className=" font-extrabold tracking-wider text-2xl">E-Learning</h1>
+        <MobileNavbar />
+      </div>
     </div>
   );
 };
 
 export default Navbar;
+
+// --------------------------------------------------------------------------
+const MobileNavbar = () => {
+  const role = "instructor";
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          size="icon"
+          className=" rounded-full bg-gray-200 hover:bg-gray-400"
+          variant="outline"
+        >
+          <Menu />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="flex flex-col ">
+        <SheetHeader className="flex flex-row  items-center justify-between mt-2">
+          <SheetTitle>E-Learning</SheetTitle>
+          <DarkMode />
+        </SheetHeader>
+        <DropdownMenuSeparator />
+        <nav className="flex flex-col space-y-4">
+          <span>My Learning</span>
+          <span>Edit Profile</span>
+          <p>Log out</p>
+        </nav>
+        {role === "instructor" && (
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button className="mt-5" type="submit">
+                Dashboard
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+};
