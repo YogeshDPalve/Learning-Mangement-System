@@ -111,7 +111,6 @@ const getUserProfileController = async (req, res) => {
     }
     res.status(200).send({
       success: true,
-      message: "User get successfully.",
       user,
     });
   } catch (error) {
@@ -131,44 +130,40 @@ const updateProfileController = async (req, res) => {
     const { name } = req.body;
     const profilePhoto = req.file;
 
-    const user = await userModel.findById({ userId });
+    const user = await userModel.findById(userId);
     if (!user) {
-      return res.status(404).send({
+      return res.status(404).json({
+        message: "User not found",
         success: false,
-        message: "User not found.",
       });
     }
-
-    // extract publicId of the old Image from the url if exists
-
+    // extract public id of the old image from the url is it exists;
     if (user.photoUrl) {
-      const publicId = user.photoUrl.split("/").pop().split(".")[0]; // extract publicId
+      const publicId = user.photoUrl.split("/").pop().split(".")[0]; // extract public id
       deleteMediaFromCloudinary(publicId);
     }
+
     // upload new photo
-    const cloudResponce = await uploadMedia(profilePhoto.path);
-    const photoUrl = cloudResponce.secure_url;
+    const cloudResponse = await uploadMedia(profilePhoto.path);
+    const photoUrl = cloudResponse.secure_url;
 
     const updatedData = { name, photoUrl };
-
     const updatedUser = await userModel
-      .findOneAndUpdate(userId, updatedData, {
+      .findByIdAndUpdate(userId, updatedData, {
         new: true,
       })
       .select("-password");
 
-    return res.status(200).send({
+    return res.status(200).json({
       success: true,
-      message: "Profile Updated Successfully.",
       user: updatedUser,
+      message: "Profile updated successfully.",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({
-      // Changed status to 500 for server errors
+    return res.status(500).json({
       success: false,
-      message: "Failed to update profile.",
-      error,
+      message: "Failed to update profile",
     });
   }
 };

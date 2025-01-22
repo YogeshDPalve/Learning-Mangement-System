@@ -23,7 +23,7 @@ import { toast } from "sonner";
 const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
-  const { data, isLoading } = useLoadUserQuery();
+  const { data, isLoading, refetch } = useLoadUserQuery();
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
     if (file) setProfilePhoto(file);
@@ -40,9 +40,7 @@ const Profile = () => {
     },
   ] = useUpdateUserMutation();
 
-  if (isLoading) return <h1>Profile isLoading.....</h1>;
-
-  const { user } = data;
+  const user = data && data.user;
 
   const updateUserHandler = async () => {
     const formData = new FormData();
@@ -53,12 +51,15 @@ const Profile = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       toast.success(data.message || "Profile Updated.");
     }
     if (isError) {
       toast.error(error.message || "Failed to Update Profile.");
     }
-  }, [error, isError, data, isSuccess]);
+  }, [error, isError, updateUserData, isSuccess]);
+
+  if (isLoading) return <h1>Profile isLoading.....</h1>;
   return (
     <div className=" max-w-4xl mx-auto px-4   my-10">
       <h1 className=" font-bold text-2xl text-center md:text-left ">PROFILE</h1>
@@ -132,8 +133,11 @@ const Profile = () => {
                 </div>
               </div>
               <DialogFooter>
-                <Button disabled={isLoading} onClick={updateUserHandler}>
-                  {isLoading ? (
+                <Button
+                  disabled={updatedUserIsLoading}
+                  onClick={updateUserHandler}
+                >
+                  {updatedUserIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Please wait

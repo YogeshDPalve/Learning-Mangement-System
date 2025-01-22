@@ -1,5 +1,5 @@
 import { Menu, School } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,12 +20,27 @@ import { Button } from "@/components/ui/button";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "@/DarkMode";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { useLogoutUserMutation } from "@/features/api/authApi";
+import { toast } from "sonner";
 
 // -------------------------------------------------------------------------
 const Navbar = () => {
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate();
   const user = true;
+
+  const logOutHandler = async () => {
+    await logoutUser();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "User log out.");
+      navigate("/login");
+    }
+  }, [isSuccess]);
   return (
     <div className=" h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 left-0 right-0 duration-300 z-10">
       {/* // ! Desktop */}
@@ -55,9 +70,11 @@ const Navbar = () => {
                 <DropdownMenuItem>
                   <Link to={"profile"}> Edit Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem onClick={logOutHandler}>
+                  Log out{" "}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Log out</DropdownMenuItem>
+                <DropdownMenuItem>Dashboard</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
