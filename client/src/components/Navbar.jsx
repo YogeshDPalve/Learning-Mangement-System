@@ -22,19 +22,26 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "@/DarkMode";
 import { Link, useNavigate } from "react-router-dom";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { useLogoutUserMutation } from "@/features/api/authApi";
+import {
+  useLoadUserQuery,
+  useLogoutUserMutation,
+} from "@/features/api/authApi";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 // -------------------------------------------------------------------------
 const Navbar = () => {
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
   const navigate = useNavigate();
-  const user = true;
+  const { isLoading } = useLoadUserQuery();
+  const { user } = useSelector((store) => store.auth.auth);
 
   const logOutHandler = async () => {
     await logoutUser();
   };
-
+  if (isLoading) {
+    return <NavbarSkeleton />;
+  }
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "User log out.");
@@ -47,7 +54,10 @@ const Navbar = () => {
       <div className="w-[90%]   max-w-7xl mx-auto hidden  md:flex justify-between items-center gap-10 h-full">
         <div className=" flex items-center gap-2 text-gray-700">
           <School size={"30"} />
-          <h1 className="hidden md:block font-extrabold text-2xl font-body">
+          <h1
+            className="hidden md:block font-extrabold text-2xl font-body cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             E-Learning
           </h1>
         </div>
@@ -57,7 +67,9 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={user?.photoUrl || "https://github.com/shadcn.png"}
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
@@ -73,14 +85,20 @@ const Navbar = () => {
                 <DropdownMenuItem onClick={logOutHandler}>
                   Log out{" "}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                {user.role === "instructor" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className=" flex gap-2 ">
-              <Button variant="outline">Login</Button>
-              <Button>Signup</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>Signup</Button>
             </div>
           )}
           <DarkMode />
@@ -133,5 +151,36 @@ const MobileNavbar = () => {
         )}
       </SheetContent>
     </Sheet>
+  );
+};
+
+const NavbarSkeleton = () => {
+  return (
+    <>
+      <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 left-0 right-0 z-10 animate-pulse">
+        {/* Desktop Skeleton */}
+        <div className="w-[90%] max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            <div className="w-32 h-6 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          </div>
+          <div className="flex gap-5">
+            {/* User Avatar Placeholder */}
+            <div className="w-10 h-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            {/* Buttons Placeholder */}
+            <div className="flex gap-2">
+              <div className="w-16 h-8 bg-gray-300 dark:bg-gray-700 rounded"></div>
+              <div className="w-20 h-8 bg-gray-300 dark:bg-gray-700 rounded"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Skeleton */}
+        <div className="flex md:hidden items-center justify-between px-4 h-full">
+          <div className="w-32 h-6 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="w-10 h-10 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+        </div>
+      </div>
+    </>
   );
 };

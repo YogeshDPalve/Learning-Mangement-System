@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { userLoggedIn } from "../authSlice";
+import { userLoggedIn, userLoggedOut } from "../authSlice";
 
 const USER_API = "http://localhost:8080/api/v1/user/";
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
@@ -9,7 +10,6 @@ export const authApi = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
-    //   user registration api
     registerUser: builder.mutation({
       query: (inputData) => ({
         url: "register",
@@ -17,9 +17,7 @@ export const authApi = createApi({
         body: inputData,
       }),
     }),
-
     loginUser: builder.mutation({
-      //   user login api
       query: (inputData) => ({
         url: "login",
         method: "POST",
@@ -34,29 +32,43 @@ export const authApi = createApi({
         }
       },
     }),
-    LogoutUser: builder.mutation({
+    logoutUser: builder.mutation({
       query: () => ({
         url: "logout",
         method: "GET",
       }),
+      async onQueryStarted(_, { queryF_ulfilled, dispatch }) {
+        try {
+          dispatch(userLoggedOut());
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     loadUser: builder.query({
       query: () => ({
         url: "profile",
         method: "GET",
       }),
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(userLoggedIn({ user: result.data.user }));
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     updateUser: builder.mutation({
-      query: (FormData) => ({
+      query: (formData) => ({
         url: "profile/update",
         method: "PUT",
-        body: FormData,
+        body: formData,
         credentials: "include",
       }),
     }),
   }),
 });
-
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
