@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDb from "./database/db.js";
 import userRoutes from "./routes/user.routes.js";
+import courseRoutes from "./routes/coure.routes.js";
 
 dotenv.config({});
 const app = express();
@@ -18,7 +19,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
   })
 );
@@ -26,14 +27,9 @@ app.use(
 // call database connection
 connectDb();
 
+// apis
 app.use("/api/v1/user", userRoutes);
-
-app.get("/", (req, res) => {
-  res.status(200).send({
-    success: true,
-    message: "Web server started successfully",
-  });
-});
+app.use("/api/v1/course", courseRoutes);
 
 // global catch
 app.use((err, req, res, next) => {
