@@ -30,4 +30,29 @@ const createCourseController = async (req, res) => {
   }
 };
 
-export { createCourseController };
+const getCreatorCoursesController = async (req, res) => {
+  try {
+    const userId = req.id;
+
+    const courses = await courseModel.find({ creator: userId });
+    if (!courses) {
+      res.status(404).send({
+        success: false,
+        message: "Course not found.",
+        courses: [],
+      });
+    }
+    return res.status(200).send({
+      courses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Failed to get courses.",
+      error,
+    });
+  }
+};
+
+export { createCourseController, getCreatorCoursesController };
