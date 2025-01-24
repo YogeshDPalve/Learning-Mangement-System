@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import connectDb from "./database/db.js";
 import userRoutes from "./routes/user.routes.js";
-import courseRoutes from "./routes/coure.routes.js";
+import courseRoutes from "./routes/course.routes.js";
 
 dotenv.config({});
 const app = express();
