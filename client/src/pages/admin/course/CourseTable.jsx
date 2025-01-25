@@ -21,7 +21,7 @@ const CourseTable = () => {
   if (isLoading) return <h1>Loading.....</h1>;
 
   return (
-    <div>
+    <div className="pt-10">
       <Button onClick={() => navigate("/admin/course/create")}>
         Create a new course
       </Button>
