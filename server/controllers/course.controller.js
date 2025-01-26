@@ -201,7 +201,17 @@ const getLectureController = async (req, res) => {
   }
 };
 
- 
+const editLectureController = async (req, res) => {
+  try {
+    const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "failed to update lecture",
+    });
+  }
+};
 
 export {
   createCourseController,
