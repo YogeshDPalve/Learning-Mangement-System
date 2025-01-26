@@ -200,6 +200,9 @@ const getLectureController = async (req, res) => {
     });
   }
 };
+
+ 
+
 export {
   createCourseController,
   getCreatorCoursesController,
