@@ -71,10 +71,8 @@ const editCourseController = async (req, res) => {
 
     let course = await courseModel.findById(courseId);
     if (!course) {
-      return res.status(404).send({
-        success: false,
-        message: "Course not found.",
-        error,
+      return res.status(404).json({
+        message: "Course not found!",
       });
     }
     let courseThumbnail;
@@ -83,11 +81,10 @@ const editCourseController = async (req, res) => {
         const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
         await deleteMediaFromCloudinary(publicId); // delete old image
       }
-
-      // upload thumbnail on cloudinary
+      // upload a thumbnail on clourdinary
       courseThumbnail = await uploadMedia(thumbnail.path);
     }
-    //
+
     const updateData = {
       courseTitle,
       subTitle,
@@ -102,19 +99,20 @@ const editCourseController = async (req, res) => {
       new: true,
     });
 
-    return res.status(200).send({
-      success: true,
+    return res.status(200).json({
       course,
-      message: "Course Updated Successfully.",
+      message: "Course updated successfully.",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({
-      success: false,
-      message: "Failed to get courses.",
-      error,
+    return res.status(500).json({
+      message: "Failed to create course",
     });
   }
 };
 
-export { createCourseController, getCreatorCoursesController };
+export {
+  createCourseController,
+  getCreatorCoursesController,
+  editCourseController,
+};
