@@ -2,6 +2,7 @@ import express from "express";
 import {
   createCourseController,
   editCourseController,
+  getCourseByIdController,
   getCreatorCoursesController,
 } from "../controllers/course.controller.js";
 import authMiddleware from "../middlewares/isAuthenticated.js";
@@ -17,5 +18,6 @@ router.put(
   upload.single("courseThumbnail"),
   editCourseController
 );
+router.get("/:courseId", authMiddleware, getCourseByIdController);
 
 export default router;

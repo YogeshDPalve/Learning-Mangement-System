@@ -111,8 +111,34 @@ const editCourseController = async (req, res) => {
   }
 };
 
+const getCourseByIdController = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await courseModel.findById(courseId);
+    if (!course) {
+      return res.status(404).send({
+        success: false,
+        message: "course not found",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      course,
+      message: "Course info get successfully by id.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to get create course by id",
+    });
+  }
+};
+
 export {
   createCourseController,
   getCreatorCoursesController,
   editCourseController,
+  getCourseByIdController,
 };
