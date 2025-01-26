@@ -18,9 +18,11 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEditCourseMutation } from "@/features/api/courseApi";
+import { toast } from "sonner";
 
 const CourseTab = () => {
   const [previewThumbnail, setPreviewThumbnail] = useState("");
@@ -33,6 +35,14 @@ const CourseTab = () => {
     coursePrice: "",
     courseThumbnail: "",
   });
+  const [editCourse, { data, isLoading, isSuccess, error }] =
+    useEditCourseMutation();
+
+  const navigate = useNavigate();
+  const params = useParams();
+  const courseId = params.courseId;
+  const isPublished = false;
+
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -57,12 +67,29 @@ const CourseTab = () => {
     }
   };
 
-  const updateCourseHandler = () => {
+  const updateCourseHandler = async () => {
     console.log(input);
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subtitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    formData.append("courseThumbnail", input.courseThumbnail);
+
+    await editCourse({ formData, courseId });
   };
-  const navigate = useNavigate();
-  const isPublished = true;
-  const isLoading = false;
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course Updated Successfully");
+    }
+    if (error) {
+      toast.error(error?.data?.message || "Failed to update course");
+    }
+  }, [isSuccess, error]);
+
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between  ">
