@@ -1,9 +1,11 @@
 import express from "express";
 import {
   createCourseController,
+  createLectureController,
   editCourseController,
   getCourseByIdController,
   getCreatorCoursesController,
+  getLectureController,
 } from "../controllers/course.controller.js";
 import authMiddleware from "../middlewares/isAuthenticated.js";
 import upload from "../utils/multer.js";
@@ -19,5 +21,8 @@ router.put(
   editCourseController
 );
 router.get("/:courseId", authMiddleware, getCourseByIdController);
+
+router.post("/:courseId/lectures", authMiddleware, createLectureController);
+router.get("/:courseId/lectures", authMiddleware, getLectureController);
 
 export default router;
