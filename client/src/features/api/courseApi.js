@@ -32,6 +32,26 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Refetch_Creator_Course"], // Refetch courses after editing
     }),
+    getCourseById: builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}`,
+        method: "GET",
+      }),
+    }),
+    createLecture: builder.mutation({
+      query: ({ lectureTitle, courseId }) => ({
+        url: `/${courseId}/lectures`,
+        method: "POST",
+        body: { lectureTitle },
+      }),
+    }),
+    getCourseLecture: builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}/lectures`,
+        method: "GET",
+      }),
+      invalidatesTags: ["Refetch_Creator_Course"],
+    }),
   }),
 });
 
@@ -39,4 +59,7 @@ export const {
   useCreateCourseMutation,
   useGetCreatorCourseQuery,
   useEditCourseMutation,
+  useGetCourseByIdQuery,
+  useCreateLectureMutation,
+  useGetCourseLectureQuery,
 } = courseApi;

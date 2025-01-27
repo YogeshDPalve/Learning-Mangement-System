@@ -21,14 +21,21 @@ import { Label } from "@/components/ui/label";
 import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEditCourseMutation } from "@/features/api/courseApi";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "@/features/api/courseApi";
 import { toast } from "sonner";
 
 const CourseTab = () => {
+  const navigate = useNavigate();
+  const params = useParams();
+  const courseId = params.courseId;
+  const isPublished = false;
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const [input, setInput] = useState({
     courseTitle: "",
-    subtitle: "",
+    subTitle: "",
     description: "",
     category: "",
     courseLevel: "",
@@ -38,10 +45,11 @@ const CourseTab = () => {
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
 
-  const navigate = useNavigate();
-  const params = useParams();
-  const courseId = params.courseId;
-  const isPublished = false;
+  const {
+    data: courseByIdData,
+    isLoading: courseByIdLoading,
+    refetch,
+  } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -68,10 +76,9 @@ const CourseTab = () => {
   };
 
   const updateCourseHandler = async () => {
-    console.log(input);
     const formData = new FormData();
     formData.append("courseTitle", input.courseTitle);
-    formData.append("subTitle", input.subtitle);
+    formData.append("subTitle", input.subTitle);
     formData.append("description", input.description);
     formData.append("category", input.category);
     formData.append("courseLevel", input.courseLevel);
@@ -79,6 +86,7 @@ const CourseTab = () => {
     formData.append("courseThumbnail", input.courseThumbnail);
 
     await editCourse({ formData, courseId });
+    console.log(formData);
   };
 
   useEffect(() => {
@@ -90,6 +98,21 @@ const CourseTab = () => {
     }
   }, [isSuccess, error]);
 
+  const course = courseByIdData?.course;
+  // console.log(course);
+  useEffect(() => {
+    if (courseByIdData) {
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+    }
+  }, [course]);
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between  ">
@@ -123,7 +146,7 @@ const CourseTab = () => {
             <Input
               type="text"
               name="subtitle" // Fixed typo
-              value={input.subtitle}
+              value={input.subTitle}
               onChange={changeEventHandler}
               placeholder="Ex. Become a fullstack developer from zero to hero in 2 months"
             />

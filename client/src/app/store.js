@@ -26,7 +26,6 @@ const initializeApp = async () => {
     if (result.error) {
       throw result.error; // Handle API errors properly
     }
-    console.log("User data loaded successfully:", result.data);
   } catch (error) {
     console.error("Error loading user data:", error);
   }
