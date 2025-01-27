@@ -204,6 +204,35 @@ const getLectureController = async (req, res) => {
 const editLectureController = async (req, res) => {
   try {
     const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+    const { courseId, lectureId } = req.params;
+
+    const lecture = await lectureModel.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).send({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    //  update lecture
+    if (lectureTitle) lecture.lectureTitle = lectureTitle;
+    if (videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+    if (videoInfo.publicId) lecture.publicId = videoInfo.publicId;
+    if (isPreviewFree) lecture.isPreviewFree = isPreviewFree;
+
+    await lecture.save();
+
+    // ensure the course still has the lecture id if it was not alreay added
+    const course = await courseModel.findById(courseId);
+    if (course && !course.lectures.includes(lecture._id)) {
+      course.lectures.push(lecture._id);
+      await course.save();
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Lecture updated successfully.",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({
