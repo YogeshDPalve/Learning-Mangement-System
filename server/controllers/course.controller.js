@@ -246,6 +246,7 @@ const editLectureController = async (req, res) => {
 const removeLectureController = async (req, res) => {
   try {
     const { lectureId } = req.params;
+    console.log( req.params);
     const lecture = await lectureModel.findByIdAndDelete(lectureId);
     if (!lecture) {
       return res.status(404).send({

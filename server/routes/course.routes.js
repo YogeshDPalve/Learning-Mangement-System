@@ -34,12 +34,12 @@ router.post(
   editLectureController
 );
 router.delete(
-  "/:courseId/lectures/:lectureId",
+  "/lectures/:lectureId",
   authMiddleware,
   removeLectureController
 );
 router.get(
-  "/:courseId/lectures/:lectureId",
+  "/lectures/:lectureId",
   authMiddleware,
   getLectureByIdController
 );

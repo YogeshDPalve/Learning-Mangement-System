@@ -60,10 +60,17 @@ export const courseApi = createApi({
         courseId,
         lectureId,
       }) => ({
-        url: `/:${courseId}/lectures/:${lectureId}`,
+        url: `/${courseId}/lectures/${lectureId}`,
         method: "POST",
         body: { lectureTitle, videoInfo, isPreviewFree },
       }),
+    }),
+    removeLecture: builder.mutation({
+      query: (lectureId) => ({
+        url: `/lectures/${lectureId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Refetch_Lecture"],
     }),
   }),
 });
@@ -75,5 +82,6 @@ export const {
   useGetCourseByIdQuery,
   useCreateLectureMutation,
   useGetCourseLectureQuery,
-  useEditLectureMutation
+  useEditLectureMutation,
+  useRemoveLectureMutation,
 } = courseApi;
