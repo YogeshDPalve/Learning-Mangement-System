@@ -10,20 +10,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { data } from "autoprefixer";
+import {
+  useEditLectureMutation,
+  useRemoveLectureMutation,
+} from "@/features/api/courseApi";
 import axios from "axios";
-import React, { useState } from "react";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
-  const [title, setTitle] = useState("");
+  const [lectureTitle, setLectureTitle] = useState("");
   const [uploadVideoInfo, setUploadVideoInfo] = useState(null);
   const [isFree, setIsFree] = useState(false);
   const [mediaProgress, setMediaProgress] = useState(false);
   const [uploadProgress, setUploadPregress] = useState(0);
   const [btnDisable, setBtnDisable] = useState(true);
+  const params = useParams();
+  const { courseId, lectureId } = params;
+  console.log(`courseId ${courseId}, lectureId ${lectureId}`);
+  const [editLecture, { data, isLoading, isSuccess, error }] =
+    useEditLectureMutation();
+  
+  const [
+    removeLecture,
+    {
+      data: removeData,
+      isLoading: removeIsLoading,
+      isSuccess: removeIsSuccess,
+    },
+  ] = useRemoveLectureMutation();
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
@@ -55,6 +74,36 @@ const LectureTab = () => {
       }
     }
   };
+
+  const editLectureHandler = async () => {
+    console.log(lectureTitle, uploadVideoInfo, isFree, courseId, lectureId);
+    await editLecture({
+      lectureTitle,
+      videoInfo: uploadVideoInfo,
+      isPreviewFree: isFree,
+      courseId,
+      lectureId,
+    });
+  };
+
+  const removeLectureHandler = async () => {
+    await removeLecture(lectureId);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message);
+    }
+    if (error) {
+      toast.error(error?.data.message);
+    }
+  }, [isSuccess, error]);
+
+  useEffect(() => {
+    if (removeIsSuccess) {
+      toast.success(removeData?.message);
+    }
+  }, [removeIsSuccess]);
   return (
     <Card>
       <CardHeader className="flex justify-between">
@@ -65,13 +114,20 @@ const LectureTab = () => {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="destructive">Remove Lecture</Button>
+          <Button variant="destructive" onClick={removeLectureHandler}>
+            Remove Lecture
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
         <div>
           <Label>Title</Label>
-          <Input type="text" placeholder="Ex. Introduction to Course" />
+          <Input
+            value={lectureTitle}
+            onChange={(e) => setLectureTitle(e.target.value)}
+            type="text"
+            placeholder="Ex. Introduction to Course"
+          />
         </div>
         <div className="my-5">
           <Label>
@@ -96,7 +152,16 @@ const LectureTab = () => {
           </div>
         )}
         <div>
-          <Button>Update Lecture</Button>
+          <Button disabled={isLoading} onClick={editLectureHandler}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please Wait
+              </>
+            ) : (
+              "Update lecture"
+            )}
+          </Button>
         </div>
       </CardContent>
     </Card>

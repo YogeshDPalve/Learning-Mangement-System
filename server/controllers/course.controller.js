@@ -232,6 +232,7 @@ const editLectureController = async (req, res) => {
     return res.status(200).send({
       success: true,
       message: "Lecture updated successfully.",
+      lecture,
     });
   } catch (error) {
     console.log(error);
@@ -242,6 +243,65 @@ const editLectureController = async (req, res) => {
   }
 };
 
+const removeLectureController = async (req, res) => {
+  try {
+    const { lectureId } = req.params;
+    console.log( req.params);
+    const lecture = await lectureModel.findByIdAndDelete(lectureId);
+    if (!lecture) {
+      return res.status(404).send({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+    // delete the lecture from cloudinary as well
+    if (lecture.publicId) {
+      await deleteMediaFromCloudinary(lecture.publicId);
+    }
+
+    // remove the lecture reference form the associated course
+    await courseModel.updateOne(
+      { lectures: lectureId }, // find the course that contains the lecture
+      { $pull: { lectures: lectureId } } // remove the lecture id from the lectures array
+    );
+
+    return res.status(200).send({
+      success: true,
+      message: "Lecture remove successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "failed to remove lecture",
+    });
+  }
+};
+
+const getLectureByIdController = async (req, res) => {
+  try {
+    const { lectureId } = req.params;
+    const lecture = await lectureModel.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).send({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    return res.status(200).send({
+      lecture,
+      success: true,
+      message: "Lecture get successfully by id.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "failed to get lecture by id",
+    });
+  }
+};
 export {
   createCourseController,
   getCreatorCoursesController,
@@ -249,4 +309,7 @@ export {
   getCourseByIdController,
   createLectureController,
   getLectureController,
+  editLectureController,
+  removeLectureController,
+  getLectureByIdController,
 };
