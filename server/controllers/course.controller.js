@@ -277,6 +277,30 @@ const removeLectureController = async (req, res) => {
   }
 };
 
+const getLectureByIdController = async (req, res) => {
+  try {
+    const { lectureId } = req.params;
+    const lecture = await lectureModel.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).send({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    return res.status(200).send({
+      lecture,
+      success: true,
+      message: "Lecture get successfully by id.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "failed to get lecture by id",
+    });
+  }
+};
 export {
   createCourseController,
   getCreatorCoursesController,
@@ -286,4 +310,5 @@ export {
   getLectureController,
   editLectureController,
   removeLectureController,
+  getLectureByIdController,
 };
