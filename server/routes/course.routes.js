@@ -34,17 +34,9 @@ router.post(
   authMiddleware,
   editLectureController
 );
-router.delete(
-  "/lectures/:lectureId",
-  authMiddleware,
-  removeLectureController
-);
-router.get(
-  "/lectures/:lectureId",
-  authMiddleware,
-  getLectureByIdController
-);
+router.delete("/lectures/:lectureId", authMiddleware, removeLectureController);
 
+router.get("/lectures/:lectureId", authMiddleware, getLectureByIdController);
 
 router.put("/:courseId", authMiddleware, togglePublicCourseController);
 
