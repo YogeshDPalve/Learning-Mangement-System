@@ -9,6 +9,7 @@ import {
   getLectureByIdController,
   getLectureController,
   removeLectureController,
+  togglePublicCourseController,
 } from "../controllers/course.controller.js";
 import authMiddleware from "../middlewares/isAuthenticated.js";
 import upload from "../utils/multer.js";
@@ -43,5 +44,8 @@ router.get(
   authMiddleware,
   getLectureByIdController
 );
+
+
+router.put("/:courseId", authMiddleware, togglePublicCourseController);
 
 export default router;

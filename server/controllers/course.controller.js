@@ -205,7 +205,7 @@ const editLectureController = async (req, res) => {
   try {
     const { lectureTitle, videoInfo, isPreviewFree } = req.body;
     const { courseId, lectureId } = req.params;
-    console.log(req.body);
+    // console.log(req.body);
 
     if (!lectureTitle) {
       return res.status(404).send({
@@ -230,7 +230,7 @@ const editLectureController = async (req, res) => {
       lecture.isPreviewFree = isPreviewFree;
 
     await lecture.save();
-    console.log(lecture);
+    // console.log(lecture);
     // ensure the course still has the lecture id if it was not alreay added
     const course = await courseModel.findById(courseId);
     if (course && !course.lectures.includes(lecture._id)) {
@@ -255,7 +255,7 @@ const editLectureController = async (req, res) => {
 const removeLectureController = async (req, res) => {
   try {
     const { lectureId } = req.params;
-    console.log(req.params);
+    // console.log(req.params);
     const lecture = await lectureModel.findByIdAndDelete(lectureId);
     if (!lecture) {
       return res.status(404).send({
@@ -311,6 +311,39 @@ const getLectureByIdController = async (req, res) => {
     });
   }
 };
+
+// publish and unpublish course logic
+
+const togglePublicCourseController = async (req, res) => {
+  try {
+    const courseId = req.params;
+    const { publish } = req.query; // true , false
+
+    const course = await courseModel.findById(courseId);
+    if (!course) {
+      return res.status(400).send({
+        success: false,
+        message: "Course not found",
+      });
+    }
+    // publish status based on the query parameter
+    course.isPublished = publish === "true";
+    await course.save();
+
+    const statusMessage = course.isPublished ? "Published" : "Unpublished";
+
+    return res.status(200).send({
+      success: true,
+      message: `Course is ${statusMessage} successfully`,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "failed to update status",
+    });
+  }
+};
 export {
   createCourseController,
   getCreatorCoursesController,
@@ -321,4 +354,5 @@ export {
   editLectureController,
   removeLectureController,
   getLectureByIdController,
+  togglePublicCourseController,
 };
