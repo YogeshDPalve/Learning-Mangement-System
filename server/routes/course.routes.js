@@ -9,6 +9,7 @@ import {
   getLectureByIdController,
   getLectureController,
   removeLectureController,
+  togglePublicCourseController,
 } from "../controllers/course.controller.js";
 import authMiddleware from "../middlewares/isAuthenticated.js";
 import upload from "../utils/multer.js";
@@ -33,15 +34,10 @@ router.post(
   authMiddleware,
   editLectureController
 );
-router.delete(
-  "/lectures/:lectureId",
-  authMiddleware,
-  removeLectureController
-);
-router.get(
-  "/lectures/:lectureId",
-  authMiddleware,
-  getLectureByIdController
-);
+router.delete("/lectures/:lectureId", authMiddleware, removeLectureController);
+
+router.get("/lectures/:lectureId", authMiddleware, getLectureByIdController);
+
+router.patch("/:courseId", authMiddleware, togglePublicCourseController);
 
 export default router;
