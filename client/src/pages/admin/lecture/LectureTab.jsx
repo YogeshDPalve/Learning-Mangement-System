@@ -34,7 +34,7 @@ const LectureTab = () => {
   console.log(`courseId ${courseId}, lectureId ${lectureId}`);
   const [editLecture, { data, isLoading, isSuccess, error }] =
     useEditLectureMutation();
-  
+
   const [
     removeLecture,
     {
@@ -114,8 +114,19 @@ const LectureTab = () => {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="destructive" onClick={removeLectureHandler}>
-            Remove Lecture
+          <Button
+            disabled={removeIsLoading}
+            variant="destructive"
+            onClick={removeLectureHandler}
+          >
+            {removeIsLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Remove lecture"
+            )}
           </Button>
         </div>
       </CardHeader>
