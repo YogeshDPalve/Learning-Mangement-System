@@ -12,17 +12,19 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import {
   useEditLectureMutation,
+  useGetLectureByIdQuery,
   useRemoveLectureMutation,
 } from "@/features/api/courseApi";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
+  const navigate = useNavigate();
   const [lectureTitle, setLectureTitle] = useState("");
   const [uploadVideoInfo, setUploadVideoInfo] = useState(null);
   const [isFree, setIsFree] = useState(false);
@@ -31,7 +33,18 @@ const LectureTab = () => {
   const [btnDisable, setBtnDisable] = useState(true);
   const params = useParams();
   const { courseId, lectureId } = params;
-  console.log(`courseId ${courseId}, lectureId ${lectureId}`);
+  // console.log(`courseId ${courseId}, lectureId ${lectureId}`);
+  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
+  const lecture = lectureData?.lecture;
+
+  useEffect(() => {
+    if (lecture) {
+      setLectureTitle(lecture.lectureTitle);
+      setIsFree(lecture.isPreviewFree);
+      setUploadVideoInfo(lecture.videoInfo);
+    }
+  }, [lecture]);
+
   const [editLecture, { data, isLoading, isSuccess, error }] =
     useEditLectureMutation();
 
@@ -153,7 +166,11 @@ const LectureTab = () => {
           />
         </div>
         <div className="flex items-center space-x-2 my-5">
-          <Switch id="airplane-mode" />
+          <Switch
+            id="airplane-mode"
+            checked={isFree}
+            onCheckedChange={setIsFree}
+          />
           <Label htmlFor="airplane-mode">Is this video FREE</Label>
         </div>
         {mediaProgress && (

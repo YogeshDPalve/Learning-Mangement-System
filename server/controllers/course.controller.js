@@ -205,11 +205,12 @@ const editLectureController = async (req, res) => {
   try {
     const { lectureTitle, videoInfo, isPreviewFree } = req.body;
     const { courseId, lectureId } = req.params;
+    console.log(req.body);
 
-    if (!lectureId || !videoInfo || !isPreviewFree) {
+    if (!lectureTitle) {
       return res.status(404).send({
         success: false,
-        message: `All fields are required`,
+        message: `Enter Lecture Title`,
       });
     }
     const lecture = await lectureModel.findById(lectureId);
@@ -222,12 +223,14 @@ const editLectureController = async (req, res) => {
 
     //  update lecture
     if (lectureTitle) lecture.lectureTitle = lectureTitle;
-    if (videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-    if (videoInfo.publicId) lecture.publicId = videoInfo.publicId;
-    if (isPreviewFree) lecture.isPreviewFree = isPreviewFree;
+    if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+    if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
+    // if (isPreviewFree) lecture.isPreviewFree = isPreviewFree;
+    if (typeof isPreviewFree !== "undefined")
+      lecture.isPreviewFree = isPreviewFree;
 
     await lecture.save();
-
+    console.log(lecture);
     // ensure the course still has the lecture id if it was not alreay added
     const course = await courseModel.findById(courseId);
     if (course && !course.lectures.includes(lecture._id)) {
