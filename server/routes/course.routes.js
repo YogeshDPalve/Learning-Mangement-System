@@ -38,6 +38,6 @@ router.delete("/lectures/:lectureId", authMiddleware, removeLectureController);
 
 router.get("/lectures/:lectureId", authMiddleware, getLectureByIdController);
 
-router.put("/:courseId", authMiddleware, togglePublicCourseController);
+router.patch("/:courseId", authMiddleware, togglePublicCourseController);
 
 export default router;

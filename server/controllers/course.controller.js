@@ -316,7 +316,8 @@ const getLectureByIdController = async (req, res) => {
 
 const togglePublicCourseController = async (req, res) => {
   try {
-    const courseId = req.params;
+    console.log(req.params);
+    const { courseId } = req.params;
     const { publish } = req.query; // true , false
 
     const course = await courseModel.findById(courseId);

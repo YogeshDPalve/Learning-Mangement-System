@@ -24,6 +24,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { toast } from "sonner";
 
@@ -31,7 +32,7 @@ const CourseTab = () => {
   const navigate = useNavigate();
   const params = useParams();
   const courseId = params.courseId;
-  const isPublished = false;
+
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const [input, setInput] = useState({
     courseTitle: "",
@@ -50,6 +51,8 @@ const CourseTab = () => {
     isLoading: courseByIdLoading,
     refetch,
   } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
+
+  const [publishCourse, {}] = usePublishCourseMutation();
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -89,6 +92,18 @@ const CourseTab = () => {
     console.log(formData);
   };
 
+  const publishStatusHandler = async (action) => {
+    try {
+      const responce = await publishCourse({ courseId, query: action });
+      if (responce.data) {
+        toast.success(responce.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course Updated Successfully");
@@ -123,8 +138,15 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
-            {isPublished ? "Unpublish" : "Publish"}
+          <Button
+            variant="outline"
+            onClick={() =>
+              publishStatusHandler(
+                courseByIdData?.course.isPublished ? "false" : "true"
+              )
+            }
+          >
+            {courseByIdData?.course.isPublished ? "Unpublish" : "Publish"}
           </Button>
           <Button>Remove course</Button>
         </div>
@@ -229,7 +251,7 @@ const CourseTab = () => {
               />
             )}
           </div>
-          <div className=" ">
+          <div className="space-x-2">
             <Button onClick={() => navigate("/admin/course")} variant="outline">
               Cancel
             </Button>
