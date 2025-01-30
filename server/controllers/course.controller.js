@@ -32,6 +32,33 @@ const createCourseController = async (req, res) => {
   }
 };
 
+const getPublishedCourseController = async (_, res) => {
+  try {
+    const courses = await courseModel
+      .find({ isPublished: true })
+      .populate({ path: "creator", select: "name, photoUrl" });
+    if (!courses) {
+      return res.status(404).send({
+        success: false,
+        message: "Courses not found",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Courses get successfully.",
+      courses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Failed to get published courses.",
+      error,
+    });
+  }
+};
+
 const getCreatorCoursesController = async (req, res) => {
   try {
     const userId = req.id;
@@ -348,6 +375,7 @@ const togglePublicCourseController = async (req, res) => {
 export {
   createCourseController,
   getCreatorCoursesController,
+  getPublishedCourseController,
   editCourseController,
   getCourseByIdController,
   createLectureController,
