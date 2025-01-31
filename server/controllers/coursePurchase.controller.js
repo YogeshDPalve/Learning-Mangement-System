@@ -4,7 +4,7 @@ import { coursePurchaseModel } from "../models/coursePurchase.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const createCheckoutSession = async (req, res) => {
+const createCheckoutSessionContoller = async (req, res) => {
   try {
     const userId = req.id;
     const { courseId } = req.body;
@@ -77,7 +77,7 @@ const createCheckoutSession = async (req, res) => {
   }
 };
 
-const stripeWebhook = async (req, res) => {
+const stripeWebhookController = async (req, res) => {
   let event;
 
   try {
@@ -146,4 +146,4 @@ const stripeWebhook = async (req, res) => {
   res.status(200).send();
 };
 
-export { createCheckoutSession, stripeWebhook };
+export { createCheckoutSessionContoller, stripeWebhookController };
