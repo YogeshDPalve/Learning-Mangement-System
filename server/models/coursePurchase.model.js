@@ -17,7 +17,7 @@ const CorsePurchaseSchema = new mongoose.Schema(
       required: true,
     },
     status: {
-      types: String,
+      type: String,
       enum: ["pending", "completed", "failed"],
       default: "pending",
     },
@@ -31,5 +31,5 @@ const CorsePurchaseSchema = new mongoose.Schema(
 
 export const coursePurchaseModel = mongoose.model(
   "CoursePurchase",
-  coursePurchaseModel
+  CorsePurchaseSchema
 );
