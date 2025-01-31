@@ -1,6 +1,8 @@
 import { Stripe } from "stripe";
 import { courseModel } from "../models/course.model.js";
 import { coursePurchaseModel } from "../models/coursePurchase.model.js";
+import { lectureModel } from "../models/lecture.model.js";
+import { userModel } from "../models/user.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -102,9 +104,11 @@ const stripeWebhookController = async (req, res) => {
     try {
       const session = event.data.object;
 
-      const purchase = await CoursePurchase.findOne({
-        paymentId: session.id,
-      }).populate({ path: "courseId" });
+      const purchase = await coursePurchaseModel
+        .findOne({
+          paymentId: session.id,
+        })
+        .populate({ path: "courseId" });
 
       if (!purchase) {
         return res.status(404).json({ message: "Purchase not found" });
@@ -117,7 +121,7 @@ const stripeWebhookController = async (req, res) => {
 
       // Make all lectures visible by setting `isPreviewFree` to true
       if (purchase.courseId && purchase.courseId.lectures.length > 0) {
-        await Lecture.updateMany(
+        await lectureModel.updateMany(
           { _id: { $in: purchase.courseId.lectures } },
           { $set: { isPreviewFree: true } }
         );
@@ -126,14 +130,14 @@ const stripeWebhookController = async (req, res) => {
       await purchase.save();
 
       // Update user's enrolledCourses
-      await User.findByIdAndUpdate(
+      await userModel.findByIdAndUpdate(
         purchase.userId,
         { $addToSet: { enrolledCourses: purchase.courseId._id } }, // Add course ID to enrolledCourses
         { new: true }
       );
 
       // Update course to add user ID to enrolledStudents
-      await Course.findByIdAndUpdate(
+      await courseModel.findByIdAndUpdate(
         purchase.courseId._id,
         { $addToSet: { enrolledStudents: purchase.userId } }, // Add user ID to enrolledStudents
         { new: true }

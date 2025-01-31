@@ -6,10 +6,10 @@ import { purchaseApi } from "@/features/api/purchaseApi";
 
 export const appStore = configureStore({
   reducer: {
-    ...rootReducer, // Spread the rootReducer instead of hardcoding `auth`
+    auth: rootReducer,
     [authApi.reducerPath]: authApi.reducer,
-    [courseApi.reducerPath]: courseApi.reducer,
-    [purchaseApi.reducerPath]: purchaseApi.reducer, // 🔥 FIX: Add this line
+    [courseApi.reducerPath]: courseApi.reducer, // Add courseApi reducer here
+    [purchaseApi.reducerPath]: purchaseApi.reducer, // Add courseApi reducer here
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -19,11 +19,15 @@ export const appStore = configureStore({
     ),
 });
 
-// Initialize the app by loading user data
 const initializeApp = async () => {
   try {
     const result = await appStore.dispatch(
-      authApi.endpoints.loadUser.initiate({}, { forceRefetch: true })
+      authApi.endpoints.loadUser.initiate(
+        {}, // Ensure that loadUser accepts an empty object as its argument
+        {
+          forceRefetch: true,
+        }
+      )
     );
     if (result.error) {
       throw result.error; // Handle API errors properly
