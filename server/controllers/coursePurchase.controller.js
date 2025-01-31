@@ -150,4 +150,64 @@ const stripeWebhookController = async (req, res) => {
   res.status(200).send();
 };
 
-export { createCheckoutSessionContoller, stripeWebhookController };
+const getCourseDetailsWithPurchaseStatusController = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
+
+    const course = await courseModel
+      .findById(courseId)
+      .populate({ path: "creator" })
+      .populate({ path: "lectures" });
+
+    if (!course) {
+      return res.status(404).send({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    const purchased = await coursePurchaseModel.findOne({ userId, courseId });
+
+    return res.status(200).send({
+      success: true,
+      message: "Course get successfully with purchased status",
+      course,
+      purchased: !!purchased, //? purchased ? true : false
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAllPurchasedCourseController = async (_, res) => {
+  try {
+    const purchasedCourses = await coursePurchaseModel
+      .find({
+        status: "completed",
+      })
+      .populate("courseId");
+
+    if (!purchasedCourses) {
+      return res.status(404).send({
+        success: false,
+        message: "Unable to found puchased courses",
+        purchasedCourses: [],
+      });
+    }
+    return res.status(200).send({
+      success: false,
+      purchasedCourses,
+      message: "All purchased courses get successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  createCheckoutSessionContoller,
+  stripeWebhookController,
+  getCourseDetailsWithPurchaseStatusController,
+  getAllPurchasedCourseController,
+};
