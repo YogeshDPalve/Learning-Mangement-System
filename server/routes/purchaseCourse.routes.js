@@ -2,6 +2,8 @@ import express from "express";
 import authMiddleware from "../middlewares/isAuthenticated.js";
 import {
   createCheckoutSessionContoller,
+  getAllPurchasedCourseController,
+  getCourseDetailsWithPurchaseStatusController,
   stripeWebhookController,
 } from "../controllers/coursePurchase.controller.js";
 
@@ -18,7 +20,10 @@ router.post(
   stripeWebhookController
 );
 
-router.get("/course/:courseId/detail-with-status");
-router.get("/");
+router.get(
+  "/course/:courseId/detail-with-status",
+  getCourseDetailsWithPurchaseStatusController
+);
+router.get("/", getAllPurchasedCourseController);
 
 export default router;
