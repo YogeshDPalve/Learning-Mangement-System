@@ -21,9 +21,10 @@ router.post(
 );
 
 router.get(
-  "/course/:courseId/detail-with-status",
+  "/course/:courseId/details-with-status",
+  authMiddleware,
   getCourseDetailsWithPurchaseStatusController
 );
-router.get("/", getAllPurchasedCourseController);
+router.get("/", authMiddleware, getAllPurchasedCourseController);
 
 export default router;
