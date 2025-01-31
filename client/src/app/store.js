@@ -9,6 +9,7 @@ export const appStore = configureStore({
     auth: rootReducer,
     [authApi.reducerPath]: authApi.reducer,
     [courseApi.reducerPath]: courseApi.reducer, // Add courseApi reducer here
+    [purchaseApi.reducerPath]: purchaseApi.reducer, // Add courseApi reducer here
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

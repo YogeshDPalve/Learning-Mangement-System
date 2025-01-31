@@ -45,5 +45,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listen at http://localhost:${port}`.bgWhite);
+  console.log(`Server listen at http://localhost:${port}`.bgWhite.black);
 });
