@@ -77,7 +77,7 @@ const createCheckoutSession = async (req, res) => {
   }
 };
 
-export const stripeWebhook = async (req, res) => {
+const stripeWebhook = async (req, res) => {
   let event;
 
   try {
