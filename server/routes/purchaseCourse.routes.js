@@ -3,7 +3,7 @@ import authMiddleware from "../middlewares/isAuthenticated.js";
 import {
   createCheckoutSessionContoller,
   stripeWebhookController,
-} from "../controllers/coursePurchase.controller";
+} from "../controllers/coursePurchase.controller.js";
 
 const router = express.Router();
 
