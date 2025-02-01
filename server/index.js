@@ -10,6 +10,7 @@ import userRoutes from "./routes/user.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import mediaRoutes from "./routes/media.routes.js";
 import purchaseCourseRoutes from "./routes/purchaseCourse.routes.js";
+import courseProgressRoutes from "./routes/courseProgess.routes.js";
 dotenv.config({});
 const app = express();
 const port = process.env.PORT || 4000;
@@ -33,6 +34,7 @@ app.use("/api/v1/media", mediaRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/purchase", purchaseCourseRoutes);
+app.use("/api/v1/progress", courseProgressRoutes);
 
 // global catch
 app.use((err, req, res, next) => {

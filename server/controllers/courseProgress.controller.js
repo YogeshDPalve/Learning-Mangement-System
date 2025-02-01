@@ -47,7 +47,7 @@ const getCourseProgressController = async (req, res) => {
   }
 };
 
-const updateLectureProgress = async (req, res) => {
+const updateLectureProgressController = async (req, res) => {
   try {
     const { courseId, lectureId } = req.params;
     const userId = req.id;
@@ -168,6 +168,7 @@ const markAsInompletedController = async (req, res) => {
 
 export {
   getCourseProgressController,
-  updateLectureProgress,
+  updateLectureProgressController,
   markAsCompletedController,
+  markAsInompletedController,
 };
