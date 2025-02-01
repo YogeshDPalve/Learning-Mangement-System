@@ -104,4 +104,70 @@ const updateLectureProgress = async (req, res) => {
   }
 };
 
-export { getCourseProgressController, updateLectureProgress };
+const markAsCompletedController = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
+
+    const courseProgress = await courseProgressModel.findOne({
+      courseId,
+      userId,
+    });
+    if (!courseProgress) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Course progress not found" });
+    }
+
+    courseProgress.lectueProgress.map(
+      (lectueProg) => (lectueProg.viewed = true)
+    );
+
+    courseProgress.completed = true;
+    await courseProgress.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Course mark as completed",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const markAsInompletedController = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
+
+    const courseProgress = await courseProgressModel.findOne({
+      courseId,
+      userId,
+    });
+    if (!courseProgress) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Course progress not found" });
+    }
+
+    courseProgress.lectueProgress.map(
+      (lectueProg) => (lectueProg.viewed = false)
+    );
+
+    courseProgress.completed = false;
+    await courseProgress.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Course mark as incompleted",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  getCourseProgressController,
+  updateLectureProgress,
+  markAsCompletedController,
+};
