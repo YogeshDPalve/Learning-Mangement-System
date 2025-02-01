@@ -47,3 +47,61 @@ const getCourseProgressController = async (req, res) => {
   }
 };
 
+const updateLectureProgress = async (req, res) => {
+  try {
+    const { courseId, lectureId } = req.params;
+    const userId = req.id;
+
+    // fetch or create course progress
+    let courseProgress = await courseProgressModel.findOne({
+      courseId,
+      userId,
+    });
+
+    if (!courseProgress) {
+      // if no progress exists, create a new record
+
+      courseProgress = new courseProgressModel({
+        userId,
+        courseId,
+        completed: false,
+        lectueProgress: [],
+      });
+    }
+
+    // find the lecture progress in the course progress
+    const lectureIndex = courseProgress.lectueProgress.findIndex(
+      (lecture) => lecture.lectureId === lectureId
+    );
+    if (lectureIndex !== -1) {
+      // if lecture already exists, update its status
+      courseProgress.lectueProgress[lectureIndex].viewed = true;
+    } else {
+      // add new lecture progress
+      courseProgress.lectueProgress.push({
+        lectureId,
+        viewed: true,
+      });
+    }
+    // if all lectures are complete
+    const lectureProgressLength = courseProgress.lectueProgress.filter(
+      (LectureProg) => LectureProg.viewed
+    ).length;
+
+    const course = await courseModel.findById(courseId);
+
+    if (course.lectures.length === lectureProgressLength)
+      courseProgress.completed = true;
+
+    await courseProgress.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Lecture progress updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getCourseProgressController, updateLectureProgress };
