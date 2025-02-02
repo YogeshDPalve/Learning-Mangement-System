@@ -14,7 +14,9 @@ const getCourseProgressController = async (req, res) => {
       })
       .populate("courseId");
 
-    const courseDetails = await courseModel.findById(courseId);
+    const courseDetails = await courseModel
+      .findById(courseId)
+      .populate("lectures");
 
     if (!courseDetails) {
       return res.status(404).send({
@@ -126,6 +128,7 @@ const markAsCompletedController = async (req, res) => {
     courseProgress.completed = true;
     await courseProgress.save();
 
+ 
     res.status(200).send({
       success: true,
       message: "Course mark as completed",
@@ -156,7 +159,7 @@ const markAsInompletedController = async (req, res) => {
 
     courseProgress.completed = false;
     await courseProgress.save();
-
+ 
     res.status(200).send({
       success: true,
       message: "Course mark as incompleted",

@@ -12,7 +12,8 @@ const router = express.Router();
 router.get("/:courseId", authMiddleware, getCourseProgressController);
 
 router.post(
-  "/:courseId/:lectureId/view".authMiddleware,
+  "/:courseId/lecture/:lectureId/view",
+  authMiddleware,
   updateLectureProgressController
 );
 

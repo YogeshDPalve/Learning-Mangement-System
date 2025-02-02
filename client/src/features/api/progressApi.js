@@ -10,14 +10,14 @@ export const courseProgressApi = createApi({
   }),
   endpoints: (builder) => ({
     getCourseProgress: builder.query({
-      query: ({ courseId }) => ({
+      query: (courseId) => ({
         url: `/${courseId}`,
         method: "GET",
       }),
     }),
     updateLectureProgress: builder.mutation({
       query: ({ courseId, lectureId }) => ({
-        url: `/${courseId}/${lectureId}/view`,
+        url: `/${courseId}/lecture/${lectureId}/view`,
         method: "POST",
       }),
     }),
