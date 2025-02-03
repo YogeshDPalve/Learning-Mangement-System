@@ -20,7 +20,7 @@ const BuyCourseButton = ({ courseId }) => {
         window.location.href = data.url; // redirect to stripe checkout url
       }
     } else {
-      toast.error("Invalid responce from server!");
+      // toast.error("Invalid responce from server!");
     }
     if (isError) {
       toast.error(error?.data?.message || "Failed to create checkout");
@@ -42,5 +42,5 @@ const BuyCourseButton = ({ courseId }) => {
     </Button>
   );
 };
-  
+
 export default BuyCourseButton;
