@@ -37,7 +37,7 @@ const getPublishedCourseController = async (_, res) => {
     const courses = await courseModel
       .find({ isPublished: true })
       .populate({ path: "creator", select: "name photoUrl" });
-    console.log(courses);
+    // console.log(courses);
     if (!courses) {
       return res.status(404).send({
         success: false,
@@ -344,7 +344,7 @@ const getLectureByIdController = async (req, res) => {
 
 const togglePublicCourseController = async (req, res) => {
   try {
-    console.log(req.params);
+    // console.log(req.params);
     const { courseId } = req.params;
     const { publish } = req.query; // true , false
 
