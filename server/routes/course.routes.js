@@ -10,6 +10,7 @@ import {
   getLectureController,
   getPublishedCourseController,
   removeLectureController,
+  searchCourseController,
   togglePublicCourseController,
 } from "../controllers/course.controller.js";
 import authMiddleware from "../middlewares/isAuthenticated.js";
@@ -18,6 +19,8 @@ import upload from "../utils/multer.js";
 const router = express.Router();
 
 router.post("/", authMiddleware, createCourseController);
+router.get("/search", authMiddleware, searchCourseController);
+
 router.get("/published-courses", authMiddleware, getPublishedCourseController);
 router.get("/", authMiddleware, getCreatorCoursesController);
 router.put(
