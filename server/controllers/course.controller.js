@@ -416,6 +416,7 @@ const togglePublicCourseController = async (req, res) => {
 };
 export {
   createCourseController,
+  searchCourseController,
   getCreatorCoursesController,
   getPublishedCourseController,
   editCourseController,
