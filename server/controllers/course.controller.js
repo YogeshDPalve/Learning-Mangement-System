@@ -32,6 +32,47 @@ const createCourseController = async (req, res) => {
   }
 };
 
+const searchCourseController = async (req, res) => {
+  try {
+    const { query = "", categories = [], sortByPrice = "" } = req.query;
+
+    // create search query
+    const searchCriteria = {
+      isPublished: true,
+      $or: [
+        { courseTitle: { $regex: query, $options: "i" } },
+        { subTitle: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
+    };
+    // if categories selected
+    if (categories.length > 0) {
+      searchCriteria.category = { $in: categories };
+    }
+
+    // defile sorting order
+    const sortOptions = {};
+    if (sortByPrice === "low") {
+      sortOptions.coursePrice = 1; // sort by price in ascending order
+    } else if (sortByPrice === "high") {
+      sortOptions.coursePrice = -1; // descending order
+    }
+
+    let courses = await courseModel
+      .find(searchCriteria)
+      .populate({ path: "creator", select: "name photoUrl" })
+      .sort(sortOptions);
+
+    return res.status(200).send({
+      success: true,
+      courses: courses || [],
+      message: "Courses search get successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getPublishedCourseController = async (_, res) => {
   try {
     const courses = await courseModel
