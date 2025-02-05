@@ -3,19 +3,22 @@ import Filter from "./Filter";
 import SearchResult from "./SearchResult";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
+import { useGetSearchCourseQuery } from "@/features/api/courseApi";
+import { useSearchParams } from "react-router-dom";
 
 const SearchPage = () => {
-  const isLoading = false;
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query");
+  const { data, isLoading } = useGetSearchCourseQuery();
+
   const isEmpty = false;
   return (
     <div className="max-w-7xl mx-auto  first-letter: p-4 md:p-8">
       <div className="my-10">
-        <h1>Result html </h1>
+        <h1 className="font-bold text-xl md:text-2xl">Results for {query} </h1>
         <p>
           showing result for{" "}
-          <span className="text-blue-800 font-bold italic">
-            Frontend developer
-          </span>
+          <span className="text-blue-800 font-bold italic"> {query}</span>
         </p>
       </div>
       <div className="flex flex-col md:flex-row font-bold gap-10">
