@@ -1,4 +1,4 @@
-﻿# Learning Management System
+﻿# Learning Management System 
 
 This project is a full-stack Learning Management System (LMS) built with React, Redux, and Node.js. It allows users to create, manage, and enroll in courses, track progress, and handle user authentication.
 
