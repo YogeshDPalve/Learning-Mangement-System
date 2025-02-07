@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Filter from "./Filter";
 import SearchResult from "./SearchResult";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,9 +9,19 @@ import { useSearchParams } from "react-router-dom";
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query");
-  const { data, isLoading } = useGetSearchCourseQuery();
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [sortByPrice, setSortByPrice] = useState("");
+  const { data, isLoading } = useGetSearchCourseQuery({
+    searhcQuery: query,
+    categories: selectedCategories,
+    sortByPrice,
+  });
 
-  const isEmpty = false;
+  const isEmpty = !isLoading && data?.courses.length === 0;
+
+  const handleFilterChange = (categories, price) => {
+    setSelectedCategories(categories), setSortByPrice(price);
+  };
   return (
     <div className="max-w-7xl mx-auto  first-letter: p-4 md:p-8">
       <div className="my-10">
@@ -22,7 +32,7 @@ const SearchPage = () => {
         </p>
       </div>
       <div className="flex flex-col md:flex-row font-bold gap-10">
-        <Filter />
+        <Filter handleFilterChange={handleFilterChange} />
         <div className="flex-1">
           {isLoading ? (
             Array.from({ length: 3 }).map((_, idx) => <CourseSkeleton />)
