@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { SelectGroup } from "@radix-ui/react-select";
-import React from "react";
+import React, { useState } from "react";
 
 const categories = [
   { id: "nextjs", label: "Next JS" },
@@ -26,13 +26,29 @@ const categories = [
   { id: "html", label: "HTML" },
 ];
 
-const Filter = () => {
-  const handleCategoryChange = (categoryId) => {};
+const Filter = ({ handleFilterChange }) => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [sortByPrice, setSortByPrice] = useState("");
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories((prevCategories) => {
+      const newCategories = prevCategories.includes(categoryId)
+        ? prevCategories.filter((id) => id != categoryId)
+        : [...prevCategories, categoryId];
+
+      handleFilterChange(newCategories, sortByPrice);
+      return newCategories;
+    });
+  };
+
+  const selectByPriceHandler = (selectedValue) => {
+    setSelectedCategories(selectedValue);
+    handleFilterChange(selectedCategories, selectedValue);
+  };
   return (
     <div className="w-full md:w-[20%]">
       <div className="flex items-center justify-between">
         <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
-        <Select>
+        <Select onValueChange={selectByPriceHandler}>
           <SelectTrigger>
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
