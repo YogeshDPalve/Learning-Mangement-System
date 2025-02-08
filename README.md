@@ -11,7 +11,7 @@ This project is a full-stack Learning Management System (LMS) built with React, 
 - [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
-
+ 
 ## Features
 
 - User Authentication (Register, Login, Logout)
