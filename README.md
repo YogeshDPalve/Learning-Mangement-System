@@ -7,7 +7,7 @@ This project is a full-stack Learning Management System (LMS) built with React, 
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Usage](#usage) 
 - [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
