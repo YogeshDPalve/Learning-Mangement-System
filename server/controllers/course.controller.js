@@ -45,17 +45,18 @@ const searchCourseController = async (req, res) => {
         { category: { $regex: query, $options: "i" } },
       ],
     };
+
     // if categories selected
     if (categories.length > 0) {
       searchCriteria.category = { $in: categories };
     }
 
-    // defile sorting order
+    // define sorting order
     const sortOptions = {};
     if (sortByPrice === "low") {
-      sortOptions.coursePrice = 1; // sort by price in ascending order
+      sortOptions.coursePrice = 1; //sort by price in ascending
     } else if (sortByPrice === "high") {
-      sortOptions.coursePrice = -1; // descending order
+      sortOptions.coursePrice = -1; // descending
     }
 
     let courses = await courseModel
@@ -63,7 +64,7 @@ const searchCourseController = async (req, res) => {
       .populate({ path: "creator", select: "name photoUrl" })
       .sort(sortOptions);
 
-    return res.status(200).send({
+    return res.status(200).json({
       success: true,
       courses: courses || [],
       message: "Courses search get successfully",

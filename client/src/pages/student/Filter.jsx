@@ -3,13 +3,13 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { SelectGroup } from "@radix-ui/react-select";
 import React, { useState } from "react";
 
 const categories = [
@@ -29,10 +29,11 @@ const categories = [
 const Filter = ({ handleFilterChange }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortByPrice, setSortByPrice] = useState("");
+
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prevCategories) => {
       const newCategories = prevCategories.includes(categoryId)
-        ? prevCategories.filter((id) => id != categoryId)
+        ? prevCategories.filter((id) => id !== categoryId)
         : [...prevCategories, categoryId];
 
       handleFilterChange(newCategories, sortByPrice);
@@ -41,7 +42,7 @@ const Filter = ({ handleFilterChange }) => {
   };
 
   const selectByPriceHandler = (selectedValue) => {
-    setSelectedCategories(selectedValue);
+    setSortByPrice(selectedValue);
     handleFilterChange(selectedCategories, selectedValue);
   };
   return (
@@ -55,15 +56,15 @@ const Filter = ({ handleFilterChange }) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sort by price</SelectLabel>
-              <SelectItem value="low">Low to High </SelectItem>
-              <SelectItem value="high">High to low</SelectItem>
+              <SelectItem value="low">Low to High</SelectItem>
+              <SelectItem value="high">High to Low</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
       <Separator className="my-4" />
-      <div className="">
-        <h1 className="font-semibold tracking-wide">CATEGORY</h1>
+      <div>
+        <h1 className="font-semibold mb-2">CATEGORY</h1>
         {categories.map((category) => (
           <div className="flex items-center space-x-2 my-2">
             <Checkbox
