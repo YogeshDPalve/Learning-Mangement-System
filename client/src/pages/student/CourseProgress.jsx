@@ -96,7 +96,7 @@ const CourseProgress = () => {
               <CheckCircle className="h-4 w-4 mr-2 text-green-500" />{" "}
               <span>
                 <TooltipProvider>
-                  <Tooltip variant='outline' >
+                  <Tooltip variant="outline">
                     <TooltipTrigger>Completed</TooltipTrigger>
                     <TooltipContent>
                       <p>Mark as incomplete</p>

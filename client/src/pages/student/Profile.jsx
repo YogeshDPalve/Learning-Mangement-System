@@ -35,7 +35,7 @@ const Profile = () => {
       isSuccess,
     },
   ] = useUpdateUserMutation();
-
+  
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
     if (file) setProfilePhoto(file);
@@ -158,13 +158,13 @@ const Profile = () => {
           </Dialog>
         </div>
       </div>
-      <div>
+      <div> 
         <h1 className="font-medium text-lg">Courses you're enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {user.enrolledCources.length === 0 ? (
+          {user.enrolledCourses.length === 0 ? (
             <h1>You haven't enrolled yet</h1>
           ) : (
-            user.enrolledCources.map((course) => (
+            user.enrolledCourses.map((course) => (
               <Course course={course} key={course._id} />
             ))
           )}
