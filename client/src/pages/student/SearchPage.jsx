@@ -40,7 +40,9 @@ const SearchPage = () => {
           ) : isEmpty ? (
             <CourseNotFound />
           ) : (
-            [1, 2, 3].map((course, idx) => <SearchResult key={idx} />)
+            data?.courses?.map((course) => (
+              <SearchResult key={course._id} course={course} />
+            ))
           )}
         </div>
       </div>
