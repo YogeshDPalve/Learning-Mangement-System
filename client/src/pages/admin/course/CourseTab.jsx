@@ -169,7 +169,7 @@ const CourseTab = () => {
             <Label>Subtitle</Label>
             <Input
               type="text"
-              name="subtitle" // Fixed typo
+              name="subTitle" // Fixed typo
               value={input.subTitle}
               onChange={changeEventHandler}
               placeholder="Ex. Become a fullstack developer from zero to hero in 2 months"

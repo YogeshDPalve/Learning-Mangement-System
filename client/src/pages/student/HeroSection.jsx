@@ -45,7 +45,10 @@ const HeroSection = () => {
             Search
           </Button>
         </form>
-        <Button className="bg-white dark:bg-gray-800 text-blue-600  rounded-full hover:bg-slate-100   shadow-sm transform hover:scale-105 transition-all duration-300">
+        <Button
+          onClick={() => navigate(`/course/search?query`)}
+          className="bg-white dark:bg-gray-800 text-blue-600  rounded-full hover:bg-slate-100   shadow-sm transform hover:scale-105 transition-all duration-300"
+        >
           Explore Courses
         </Button>
       </div>
