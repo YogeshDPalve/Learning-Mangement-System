@@ -107,7 +107,7 @@ const CourseProgress = () => {
             </div>
           ) : (
             "Mark as complete"
-          )}
+          )} 
         </Button>
       </div>
 
