@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <div className="flex ">
       {/* Sidebar */}
-      <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-gray-300 dark:border-gray-700 p-5 bg-[#f0f0f0] sticky top-0 h-screen pt-14 ">
+      <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-gray-300 dark:border-gray-700 p-5  sticky top-0 h-screen  ">
         <div className="space-y-4 mt-10">
           <Link to="dashboard" className="flex items-center gap-2">
             <ChartNoAxesColumn size={22} />
@@ -19,7 +19,7 @@ const Sidebar = () => {
         </div>
       </div>
       {/* Main Content */}
-      <div className="flex-1 p-10 bg-white">
+      <div className="flex-1 p-10  ">
         <Outlet />
       </div>
     </div>

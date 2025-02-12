@@ -10,7 +10,7 @@ const Courses = () => {
     return <h1>Some error occurred while fetching courses</h1>;
   }
   return (
-    <div className="bg-gray-50 ">
+    <div className="bg-gray-50 dark:bg-[#1e1d1d] ">
       <div className="max-w-7xl mx-auto p-6">
         <h2
           className="font-bold text-3xl text-center 
