@@ -107,7 +107,7 @@ const CourseProgress = () => {
             </div>
           ) : (
             "Mark as complete"
-          )} 
+          )}
         </Button>
       </div>
 
@@ -144,8 +144,8 @@ const CourseProgress = () => {
                 key={lecture._id}
                 className={`mb-3 hover:cursor-pointer transition transform ${
                   lecture._id === currentLecture?._id
-                    ? "bg-gray-200"
-                    : "dark:bg-gray-700"
+                    ? "bg-gray-200 dark:bg-gray-800"
+                    : ""
                 }`}
                 onClick={() => handleSelectLecture(lecture)}
               >

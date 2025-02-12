@@ -85,7 +85,7 @@ const Navbar = () => {
                 <DropdownMenuItem onClick={logOutHandler}>
                   Log out{" "}
                 </DropdownMenuItem>
-                {user.role === "instructor" && (
+                {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
@@ -145,7 +145,7 @@ const MobileNavbar = ({ user }) => {
           <Link to={"/profile"}>Edit Profile</Link>
           <p>Log out</p>
         </nav>
-        {user.role === "instructor" && (
+        {user?.role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
               <Button
