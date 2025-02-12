@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   const totalSales = purchasedCourses.length;
   return (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pt-12">
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader>
           <CardTitle>Total Sales</CardTitle>
