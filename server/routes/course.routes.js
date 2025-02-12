@@ -21,7 +21,7 @@ const router = express.Router();
 router.post("/", authMiddleware, createCourseController);
 router.get("/search", authMiddleware, searchCourseController);
 
-router.get("/published-courses", authMiddleware, getPublishedCourseController);
+router.get("/published-courses", getPublishedCourseController);
 router.get("/", authMiddleware, getCreatorCoursesController);
 router.put(
   "/:courseId",
