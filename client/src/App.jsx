@@ -21,6 +21,7 @@ import {
   AuthenticatedUser,
   ProtectedRoutes,
 } from "./components/ProtectedRoutes";
+import { PurchasedCourseProtectedRoutes } from "./components/PurchasedCourseProtectedRoutes";
 
 const appRouter = createBrowserRouter([
   {
@@ -80,7 +81,9 @@ const appRouter = createBrowserRouter([
         path: "course-progress/:courseId",
         element: (
           <ProtectedRoutes>
-            <CourseProgress />,
+            <PurchasedCourseProtectedRoutes>
+              <CourseProgress />,
+            </PurchasedCourseProtectedRoutes>
           </ProtectedRoutes>
         ),
       },
