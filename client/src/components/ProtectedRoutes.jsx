@@ -23,7 +23,7 @@ export const AuthenticatedUser = ({ children }) => {
 export const AdminRoute = ({ children }) => {
   const { user, isAuthenticated } = useSelector((store) => store.auth.auth);
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
   if (user.role !== "instructor") {

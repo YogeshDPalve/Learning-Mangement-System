@@ -22,6 +22,7 @@ import {
   ProtectedRoutes,
 } from "./components/ProtectedRoutes";
 import { PurchasedCourseProtectedRoutes } from "./components/PurchasedCourseProtectedRoutes";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const appRouter = createBrowserRouter([
   {
@@ -57,7 +58,7 @@ const appRouter = createBrowserRouter([
         path: "profile",
         element: (
           <ProtectedRoutes>
-            <Profile />,
+            <Profile />
           </ProtectedRoutes>
         ),
       },
@@ -65,7 +66,7 @@ const appRouter = createBrowserRouter([
         path: "course/search",
         element: (
           <ProtectedRoutes>
-            <SearchPage />,
+            <SearchPage />
           </ProtectedRoutes>
         ),
       },
@@ -73,7 +74,7 @@ const appRouter = createBrowserRouter([
         path: "course-detail/:courseId",
         element: (
           <ProtectedRoutes>
-            <CourseDetail />,
+            <CourseDetail />
           </ProtectedRoutes>
         ),
       },
@@ -82,7 +83,7 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoutes>
             <PurchasedCourseProtectedRoutes>
-              <CourseProgress />,
+              <CourseProgress />
             </PurchasedCourseProtectedRoutes>
           </ProtectedRoutes>
         ),
@@ -131,7 +132,9 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <main>
-      <RouterProvider router={appRouter} />
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
     </main>
   );
 }
